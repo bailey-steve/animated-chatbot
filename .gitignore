@@ -1,0 +1,62 @@
+# Build directories
+cmake-build-*/
+build/
+out/
+
+# IDE files
+.idea/
+*.user
+*.autosave
+*.pro.user
+*.pro.user.*
+.vscode/
+*.swp
+*.swo
+*~
+
+# Compiled files
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.exe
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+
+# Qt
+*.qm
+*.prl
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.moc
+.qmake.stash
+*.pro.user*
+
+# Platform specific
+.DS_Store
+Thumbs.db
+*.swp
+
+# Dependencies
+third_party/*/
+
+# Assets (large files)
+assets/models/*.glb
+assets/models/*.gltf
+assets/voices/*.onnx
+*.onnx
+
+# Logs
+*.log
+
+# User data
+config/user_*.json
