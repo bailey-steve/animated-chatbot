@@ -2,6 +2,7 @@
 #define CHATBOT_AVATARENGINE_H
 
 #include "avatar/VisemeMapper.h"
+#include "emotion/EmotionDetector.h"
 #include <QObject>
 #include <QString>
 #include <QVector3D>
@@ -65,6 +66,10 @@ public:
     void applyViseme(const Viseme& viseme, float blendFactor = 1.0f);
     void applyPhoneme(const QString& phoneme);
 
+    // Emotion / Expression control
+    void applyEmotion(Emotion emotion);
+    Emotion getCurrentEmotion() const { return m_currentEmotion; }
+
 signals:
     void modelLoaded(const QString& modelPath);
     void modelLoadFailed(const QString& error);
@@ -93,6 +98,20 @@ private:
     Qt3DCore::QTransform* m_mouthTransform;
     Qt3DExtras::QPhongMaterial* m_mouthMaterial;
 
+    // Eye components
+    Qt3DExtras::QSphereMesh* m_leftEyeMesh;
+    Qt3DExtras::QSphereMesh* m_rightEyeMesh;
+    Qt3DCore::QTransform* m_leftEyeTransform;
+    Qt3DCore::QTransform* m_rightEyeTransform;
+    Qt3DExtras::QPhongMaterial* m_eyeMaterial;
+
+    // Eyebrow components
+    Qt3DExtras::QCylinderMesh* m_leftEyebrowMesh;
+    Qt3DExtras::QCylinderMesh* m_rightEyebrowMesh;
+    Qt3DCore::QTransform* m_leftEyebrowTransform;
+    Qt3DCore::QTransform* m_rightEyebrowTransform;
+    Qt3DExtras::QPhongMaterial* m_eyebrowMaterial;
+
     // Animation
     AvatarState m_state;
     float m_animationTime;
@@ -105,6 +124,12 @@ private:
     Viseme m_targetViseme;
     float m_visemeBlendTime;
     float m_visemeBlendDuration;
+
+    // Emotion / Expression
+    Emotion m_currentEmotion;
+    Emotion m_targetEmotion;
+    float m_emotionBlendTime;
+    float m_emotionBlendDuration;
 };
 
 } // namespace Chatbot

@@ -33,8 +33,14 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 - ✅ Real-time lip-sync driven by TTS phoneme timeline
 - ✅ Mouth attached to head (moves with animations)
 
+#### Phase 5 - ✅ Completed
+- ✅ Keyword-based emotion detection system
+- ✅ Eyes and eyebrows added to avatar
+- ✅ 6 distinct emotional expressions (Neutral, Happy, Sad, Surprised, Thoughtful, Worried)
+- ✅ Dynamic eyebrow positioning and rotation
+- ✅ Real-time expression changes based on bot response sentiment
+
 ### Planned
-- 🔄 **Phase 5**: Emotional expressions (sentiment analysis)
 - 🔄 **Phase 6**: Multiple personalities (JSON-based configs)
 - 🔄 **Phase 7**: Polish & optimization
 

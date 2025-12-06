@@ -4,6 +4,7 @@
 #include "chat/ChatEngine.h"
 #include "tts/TTSEngine.h"
 #include "avatar/AvatarEngine.h"
+#include "emotion/EmotionDetector.h"
 #include <spdlog/spdlog.h>
 
 namespace Chatbot {
@@ -54,6 +55,10 @@ void Application::initializeComponents() {
     // Create TTSEngine
     m_ttsEngine = std::make_unique<TTSEngine>();
     spdlog::info("TTSEngine initialized");
+
+    // Create EmotionDetector
+    m_emotionDetector = std::make_unique<EmotionDetector>();
+    spdlog::info("EmotionDetector initialized");
 
     // Create MainWindow
     m_mainWindow = std::make_unique<MainWindow>();
@@ -106,6 +111,16 @@ void Application::setupConnections() {
                             avatarEngine->applyPhoneme("");
                         });
         spdlog::info("Lip-sync connections established");
+
+        // Connect ChatEngine to EmotionDetector to AvatarEngine (emotional expressions)
+        QObject::connect(m_chatEngine.get(), &ChatEngine::responseReceived,
+                        this, [this, avatarEngine](const QString& response) {
+                            // Detect emotion from bot response text
+                            Emotion emotion = m_emotionDetector->detectEmotion(response);
+                            // Apply emotion to avatar
+                            avatarEngine->applyEmotion(emotion);
+                        });
+        spdlog::info("Emotion detection connections established");
     }
 
     spdlog::info("Connections established");
