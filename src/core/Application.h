@@ -10,6 +10,7 @@ namespace Chatbot {
 // Forward declarations
 class MainWindow;
 class ChatEngine;
+class TTSEngine;
 
 class Application : public QObject {
     Q_OBJECT
@@ -38,6 +39,7 @@ private:
     std::unique_ptr<QApplication> m_qApp;
     std::unique_ptr<MainWindow> m_mainWindow;
     std::unique_ptr<ChatEngine> m_chatEngine;
+    std::unique_ptr<TTSEngine> m_ttsEngine;
 
     int m_argc;
     char** m_argv;

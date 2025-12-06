@@ -56,6 +56,9 @@ set(SOURCES
     # Chat
     src/chat/ChatEngine.cpp
     src/chat/ConversationHistory.cpp
+    # TTS
+    src/tts/TTSEngine.cpp
+    src/tts/PhonemeExtractor.cpp
     # UI
     src/ui/MainWindow.cpp
 )
@@ -67,6 +70,9 @@ set(HEADERS
     # Chat
     src/chat/ChatEngine.h
     src/chat/ConversationHistory.h
+    # TTS
+    src/tts/TTSEngine.h
+    src/tts/PhonemeExtractor.h
     # UI
     src/ui/MainWindow.h
 )
@@ -119,4 +125,12 @@ file(COPY ${CMAKE_SOURCE_DIR}/assets
 
 file(COPY ${CMAKE_SOURCE_DIR}/config
     DESTINATION ${CMAKE_BINARY_DIR}
+)
+
+# Copy Piper TTS binaries and voices to build directory
+file(COPY ${CMAKE_SOURCE_DIR}/third_party/piper
+    DESTINATION ${CMAKE_BINARY_DIR}/third_party
+)
+file(COPY ${CMAKE_SOURCE_DIR}/third_party/voices
+    DESTINATION ${CMAKE_BINARY_DIR}/third_party
 )

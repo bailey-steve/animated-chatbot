@@ -1,6 +1,7 @@
 #include "core/Application.h"
 #include "ui/MainWindow.h"
 #include "chat/ChatEngine.h"
+#include "tts/TTSEngine.h"
 #include <spdlog/spdlog.h>
 
 namespace Chatbot {
@@ -48,6 +49,10 @@ void Application::initializeComponents() {
     m_chatEngine = std::make_unique<ChatEngine>();
     spdlog::info("ChatEngine initialized");
 
+    // Create TTSEngine
+    m_ttsEngine = std::make_unique<TTSEngine>();
+    spdlog::info("TTSEngine initialized");
+
     // Create MainWindow
     m_mainWindow = std::make_unique<MainWindow>();
     spdlog::info("MainWindow initialized");
@@ -71,6 +76,19 @@ void Application::setupConnections() {
                     m_mainWindow.get(), [this]() {
                         m_mainWindow->addSystemMessage("Thinking...");
                     });
+
+    // Connect ChatEngine to TTSEngine (speak bot responses)
+    QObject::connect(m_chatEngine.get(), &ChatEngine::responseReceived,
+                    m_ttsEngine.get(), &TTSEngine::synthesize);
+
+    // Connect TTSEngine to MainWindow (status messages)
+    QObject::connect(m_ttsEngine.get(), &TTSEngine::synthesisStarted,
+                    m_mainWindow.get(), [this]() {
+                        m_mainWindow->addSystemMessage("Speaking...");
+                    });
+
+    QObject::connect(m_ttsEngine.get(), &TTSEngine::errorOccurred,
+                    m_mainWindow.get(), &MainWindow::addSystemMessage);
 
     spdlog::info("Connections established");
 }

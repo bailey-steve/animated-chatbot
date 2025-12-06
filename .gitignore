@@ -48,6 +48,8 @@ Thumbs.db
 
 # Dependencies
 third_party/*/
+third_party/*.tar.gz
+third_party/*.wav
 
 # Assets (large files)
 assets/models/*.glb

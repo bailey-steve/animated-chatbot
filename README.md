@@ -4,15 +4,22 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 
 ## Features
 
-### Current (Phase 1 - ✅ Completed)
+### Current
+#### Phase 1 - ✅ Completed
 - ✅ Qt6-based modern UI with chat interface
 - ✅ Local LLM integration via Ollama API
 - ✅ Conversation history management
 - ✅ Asynchronous message processing
 - ✅ Error handling and logging
 
+#### Phase 2 - ✅ Completed
+- ✅ Text-to-Speech with Piper TTS
+- ✅ Phoneme extraction pipeline
+- ✅ Audio playback with Qt Multimedia
+- ✅ Automatic speech synthesis for bot responses
+- ✅ High-quality neural TTS voice (Lessac)
+
 ### Planned
-- 🔄 **Phase 2**: Text-to-Speech with phoneme extraction (Piper TTS)
 - 🔄 **Phase 3**: 3D avatar display (Qt3D/OpenGL with GLTF models)
 - 🔄 **Phase 4**: Accurate lip-sync system (phoneme → viseme mapping)
 - 🔄 **Phase 5**: Emotional expressions (sentiment analysis)
@@ -49,6 +56,20 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 4. **Download LLM Model**
    ```bash
    ollama pull llama3.2:3b
+   ```
+
+5. **Piper TTS** (for text-to-speech)
+   ```bash
+   # Download Piper TTS binary
+   mkdir -p third_party && cd third_party
+   wget https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_x86_64.tar.gz
+   tar -xzf piper_linux_x86_64.tar.gz
+
+   # Download voice model
+   mkdir -p voices && cd voices
+   wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx
+   wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json
+   cd ../..
    ```
 
 ## Building the Project
@@ -194,7 +215,9 @@ Chatbot/
 │   │   └── ConversationHistory.{h,cpp}
 │   ├── ui/
 │   │   └── MainWindow.{h,cpp}  # Qt chat interface
-│   ├── tts/                    # (Phase 2) Text-to-speech
+│   ├── tts/
+│   │   ├── TTSEngine.{h,cpp}   # Piper TTS integration
+│   │   └── PhonemeExtractor.{h,cpp} # Phoneme parsing
 │   ├── avatar/                 # (Phase 3) 3D rendering
 │   ├── emotion/                # (Phase 5) Sentiment analysis
 │   └── personality/            # (Phase 6) Personality configs
@@ -220,18 +243,23 @@ Chatbot/
     │  App    │
     └────┬────┘
          │
-    ┌────┴─────────┐
-    ▼              ▼
-┌────────┐    ┌──────────┐
-│  Chat  │    │   UI     │
-│ Engine │◄───┤ Main     │
-│(Ollama)│    │ Window   │
-└────┬───┘    └──────────┘
-     │
-┌────▼──────────┐
-│ Conversation  │
-│   History     │
-└───────────────┘
+    ┌────┴─────────────────┐
+    ▼         ▼            ▼
+┌────────┐┌────────┐  ┌──────────┐
+│  Chat  ││  TTS   │  │   UI     │
+│ Engine ││ Engine │  │ Main     │
+│(Ollama)││(Piper) │  │ Window   │
+└────┬───┘└───┬────┘  └──────────┘
+     │        │
+┌────▼────┐  │
+│Conver-  │  │
+│sation   │  │
+│History  │  │
+└─────────┘  ▼
+         ┌────────────┐
+         │  Phoneme   │
+         │ Extractor  │
+         └────────────┘
 ```
 
 ### Technology Stack
@@ -301,18 +329,20 @@ m_model = "mistral:7b"
 - Ollama integration
 - Chat functionality
 
-### 🔄 Phase 2: TTS (Weeks 5-6) - NEXT
-**Goals**:
-- Integrate Piper TTS
-- Extract phoneme data with timestamps
-- Audio playback
+### ✅ Phase 2: TTS (Weeks 5-6) - COMPLETED
+**Implemented**:
+- ✅ Integrated Piper TTS (subprocess approach)
+- ✅ Phoneme extraction with timing data
+- ✅ Qt Multimedia audio playback
+- ✅ Automatic speech synthesis for bot responses
+- ✅ High-quality neural TTS voice (Lessac)
 
 **Testing**:
-- Verify TTS generates audio
-- Check phoneme timing accuracy
-- Test audio synchronization
+- ✅ TTS generates audio successfully
+- ✅ Phoneme timing extracted accurately
+- ✅ Audio playback synchronized
 
-### 🔄 Phase 3: 3D Avatar (Weeks 7-9)
+### 🔄 Phase 3: 3D Avatar (Weeks 7-9) - NEXT
 **Goals**:
 - Qt3D scene setup
 - Load GLTF models
@@ -379,11 +409,12 @@ To be determined.
 
 - **Qt Framework**: Cross-platform UI
 - **Ollama**: Local LLM inference
+- **Piper TTS**: Neural text-to-speech synthesis
 - **Anthropic Claude**: Development assistance
 - **Open Source Libraries**: nlohmann/json, cpr, spdlog
 
 ---
 
-**Version**: 1.0.0 (Phase 1)
+**Version**: 2.0.0 (Phase 2)
 **Last Updated**: 2025-12-06
 **Status**: Active Development
