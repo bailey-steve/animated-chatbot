@@ -1,7 +1,9 @@
 #include "core/Application.h"
 #include "ui/MainWindow.h"
+#include "ui/AvatarViewport.h"
 #include "chat/ChatEngine.h"
 #include "tts/TTSEngine.h"
+#include "avatar/AvatarEngine.h"
 #include <spdlog/spdlog.h>
 
 namespace Chatbot {
@@ -89,6 +91,22 @@ void Application::setupConnections() {
 
     QObject::connect(m_ttsEngine.get(), &TTSEngine::errorOccurred,
                     m_mainWindow.get(), &MainWindow::addSystemMessage);
+
+    // Connect TTSEngine to AvatarEngine (lip-sync)
+    auto avatarEngine = m_mainWindow->getAvatarViewport()->getAvatarEngine();
+    if (avatarEngine) {
+        QObject::connect(m_ttsEngine.get(), &TTSEngine::currentPhoneme,
+                        avatarEngine, [avatarEngine](const Phoneme& phoneme, int index) {
+                            avatarEngine->applyPhoneme(phoneme.symbol);
+                        });
+
+        QObject::connect(m_ttsEngine.get(), &TTSEngine::playbackFinished,
+                        avatarEngine, [avatarEngine]() {
+                            // Return to silence/rest position when done speaking
+                            avatarEngine->applyPhoneme("");
+                        });
+        spdlog::info("Lip-sync connections established");
+    }
 
     spdlog::info("Connections established");
 }

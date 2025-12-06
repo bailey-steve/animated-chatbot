@@ -19,12 +19,24 @@ AvatarEngine::AvatarEngine(Qt3DCore::QEntity *rootEntity, QObject *parent)
     , m_material(nullptr)
     , m_headTransform(nullptr)
     , m_neckTransform(nullptr)
+    , m_mouthMesh(nullptr)
+    , m_mouthTransform(nullptr)
+    , m_mouthMaterial(nullptr)
     , m_state(AvatarState::Idle)
     , m_animationTime(0.0f)
     , m_animationSpeed(1.0f)
     , m_isAnimating(false)
+    , m_visemeMapper(std::make_unique<VisemeMapper>())
+    , m_visemeBlendTime(0.0f)
+    , m_visemeBlendDuration(0.05f)  // 50ms blend time
 {
     spdlog::info("AvatarEngine initializing...");
+
+    // Load viseme mapping
+    m_visemeMapper->loadMapping("./config/viseme_mapping.json");
+    m_currentViseme = m_visemeMapper->getSilenceViseme();
+    m_targetViseme = m_currentViseme;
+
     createPlaceholderAvatar();
     setupIdleAnimation();
     spdlog::info("AvatarEngine initialized");
@@ -84,8 +96,34 @@ void AvatarEngine::createPlaceholderAvatar() {
     neckEntity->addComponent(m_neckTransform);
     neckEntity->addComponent(neckMaterial);
 
-    spdlog::info("Placeholder avatar created: head entity at (0, 1, 0), neck at (0, 0.5, 0)");
-    spdlog::debug("Head: sphere radius=0.5, Neck: cylinder radius=0.15 length=0.4");
+    // Create mouth (flattened sphere on front of head)
+    m_mouthMesh = new Qt3DExtras::QSphereMesh();
+    m_mouthMesh->setRadius(0.08f);  // Small mouth
+    m_mouthMesh->setRings(16);
+    m_mouthMesh->setSlices(16);
+
+    m_mouthTransform = new Qt3DCore::QTransform();
+    // Position relative to head center (head is a sphere at origin of headEntity)
+    // Head center is at (0, 0, 0) in head-local space
+    // Place mouth slightly below center and in front
+    m_mouthTransform->setTranslation(QVector3D(0.0f, -0.1f, 0.45f));
+    // Flatten in Z to make it look more like a mouth shape
+    m_mouthTransform->setScale3D(QVector3D(1.0f, 0.6f, 0.3f));
+
+    m_mouthMaterial = new Qt3DExtras::QPhongMaterial();
+    m_mouthMaterial->setDiffuse(QColor(180, 100, 100));  // Reddish for mouth/lips
+    m_mouthMaterial->setAmbient(QColor(120, 60, 60));
+    m_mouthMaterial->setSpecular(QColor(30, 30, 30));
+    m_mouthMaterial->setShininess(15.0f);
+
+    // Create mouth entity as child of HEAD (not avatar) so it moves with head
+    Qt3DCore::QEntity* mouthEntity = new Qt3DCore::QEntity(headEntity);
+    mouthEntity->addComponent(m_mouthMesh);
+    mouthEntity->addComponent(m_mouthTransform);
+    mouthEntity->addComponent(m_mouthMaterial);
+
+    spdlog::info("Placeholder avatar created: head at (0, 1, 0), neck at (0, 0.5, 0), mouth at (0, 0.9, 0.45)");
+    spdlog::debug("Head: sphere radius=0.5, Neck: cylinder radius=0.15 length=0.4, Mouth: flattened sphere");
 }
 
 void AvatarEngine::setupIdleAnimation() {
@@ -134,8 +172,8 @@ void AvatarEngine::updateAnimation(float deltaTime) {
     m_animationTime += deltaTime * m_animationSpeed;
 
     // Gentle bobbing motion (up and down)
-    float bobAmount = 0.10f;  // Subtle vertical movement
-    float bobFrequency = 1.2f;  // Hz (slow, breathing-like rhythm)
+    float bobAmount = 0.03f;  // Very subtle vertical movement
+    float bobFrequency = 1.0f;  // Hz (slow, breathing-like rhythm)
     float yOffset = bobAmount * qSin(m_animationTime * bobFrequency * 2.0f * M_PI);
 
     // Gentle head rotation (subtle nod)
@@ -179,6 +217,58 @@ bool AvatarEngine::loadModel(const QString& modelPath) {
 
     // TODO: Implement GLTF loading using Qt3D's scene loader
     // This will be enhanced once we have a proper model with blend shapes
+}
+
+void AvatarEngine::applyViseme(const Viseme& viseme, float blendFactor) {
+    if (!m_mouthTransform) {
+        return;
+    }
+
+    // Set target viseme for blending
+    m_targetViseme = viseme;
+
+    // If immediate application (blendFactor = 1.0), skip blending
+    if (blendFactor >= 1.0f) {
+        m_currentViseme = viseme;
+        m_visemeBlendTime = m_visemeBlendDuration;
+    } else {
+        // Start blending
+        m_visemeBlendTime = 0.0f;
+    }
+
+    // Apply mouth shape based on viseme parameters
+    // Scale the mouth mesh to match the viseme's mouth width and height
+    float baseScale = 1.0f;
+    float width = baseScale + (viseme.mouthWidth * 2.0f);   // Scale width
+    float height = baseScale + (viseme.mouthHeight * 2.0f); // Scale height
+    float depth = 0.3f;  // Keep depth relatively constant (flat mouth)
+
+    // Apply jaw opening by translating mouth down
+    float jawOffset = viseme.jawOpen * 0.1f;  // Move down when jaw opens
+
+    // Update mouth transform (position relative to head center)
+    QVector3D basePosition(0.0f, -0.1f, 0.45f);  // Head-relative coordinates
+    m_mouthTransform->setTranslation(basePosition + QVector3D(0.0f, -jawOffset, 0.0f));
+    m_mouthTransform->setScale3D(QVector3D(width, height, depth));
+
+    spdlog::debug("Applied viseme: {} (width={:.2f}, height={:.2f}, jaw={:.2f})",
+                  viseme.name.toStdString(), viseme.mouthWidth, viseme.mouthHeight, viseme.jawOpen);
+}
+
+void AvatarEngine::applyPhoneme(const QString& phoneme) {
+    if (!m_visemeMapper || !m_visemeMapper->isLoaded()) {
+        spdlog::warn("VisemeMapper not loaded, cannot apply phoneme: {}", phoneme.toStdString());
+        return;
+    }
+
+    // Convert phoneme to viseme
+    Viseme viseme = m_visemeMapper->getVisemeForPhoneme(phoneme);
+
+    // Apply the viseme
+    applyViseme(viseme, 0.5f);  // Use blending
+
+    spdlog::debug("Phoneme '{}' mapped to viseme '{}'",
+                  phoneme.toStdString(), viseme.name.toStdString());
 }
 
 } // namespace Chatbot

@@ -61,6 +61,7 @@ set(SOURCES
     src/tts/PhonemeExtractor.cpp
     # Avatar
     src/avatar/AvatarEngine.cpp
+    src/avatar/VisemeMapper.cpp
     # UI
     src/ui/MainWindow.cpp
     src/ui/AvatarViewport.cpp
@@ -78,6 +79,7 @@ set(HEADERS
     src/tts/PhonemeExtractor.h
     # Avatar
     src/avatar/AvatarEngine.h
+    src/avatar/VisemeMapper.h
     # UI
     src/ui/MainWindow.h
     src/ui/AvatarViewport.h

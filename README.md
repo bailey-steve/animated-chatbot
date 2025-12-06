@@ -26,8 +26,14 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 - ✅ Idle animation with bobbing and nodding
 - ✅ 60 FPS animation loop
 
+#### Phase 4 - ✅ Completed
+- ✅ Viseme mapping system (15 distinct mouth shapes)
+- ✅ Phoneme-to-viseme conversion with JSON config
+- ✅ Animated mouth mesh with dynamic scaling
+- ✅ Real-time lip-sync driven by TTS phoneme timeline
+- ✅ Mouth attached to head (moves with animations)
+
 ### Planned
-- 🔄 **Phase 4**: Accurate lip-sync system (phoneme → viseme mapping)
 - 🔄 **Phase 5**: Emotional expressions (sentiment analysis)
 - 🔄 **Phase 6**: Multiple personalities (JSON-based configs)
 - 🔄 **Phase 7**: Polish & optimization

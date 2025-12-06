@@ -1,0 +1,165 @@
+{
+  "visemes": {
+    "silence": {
+      "id": 0,
+      "description": "Mouth closed, rest position",
+      "mouth_width": 0.0,
+      "mouth_height": 0.0,
+      "jaw_open": 0.0
+    },
+    "PP": {
+      "id": 1,
+      "description": "Lips pressed together (p, b, m)",
+      "mouth_width": 0.0,
+      "mouth_height": 0.0,
+      "jaw_open": 0.0
+    },
+    "FF": {
+      "id": 2,
+      "description": "Lower lip to upper teeth (f, v)",
+      "mouth_width": 0.3,
+      "mouth_height": 0.2,
+      "jaw_open": 0.1
+    },
+    "TH": {
+      "id": 3,
+      "description": "Tongue between teeth (th)",
+      "mouth_width": 0.4,
+      "mouth_height": 0.3,
+      "jaw_open": 0.2
+    },
+    "DD": {
+      "id": 4,
+      "description": "Tongue to alveolar ridge (d, t, n, l)",
+      "mouth_width": 0.35,
+      "mouth_height": 0.25,
+      "jaw_open": 0.15
+    },
+    "kk": {
+      "id": 5,
+      "description": "Back of tongue raised (k, g, ng)",
+      "mouth_width": 0.4,
+      "mouth_height": 0.3,
+      "jaw_open": 0.2
+    },
+    "CH": {
+      "id": 6,
+      "description": "Rounded with teeth visible (ch, j, sh)",
+      "mouth_width": 0.45,
+      "mouth_height": 0.35,
+      "jaw_open": 0.25
+    },
+    "SS": {
+      "id": 7,
+      "description": "Teeth together, slight smile (s, z)",
+      "mouth_width": 0.5,
+      "mouth_height": 0.2,
+      "jaw_open": 0.1
+    },
+    "nn": {
+      "id": 8,
+      "description": "Neutral, slight opening (schwa, r)",
+      "mouth_width": 0.3,
+      "mouth_height": 0.25,
+      "jaw_open": 0.15
+    },
+    "RR": {
+      "id": 9,
+      "description": "Slight pucker, rounded (r)",
+      "mouth_width": 0.35,
+      "mouth_height": 0.4,
+      "jaw_open": 0.2
+    },
+    "aa": {
+      "id": 10,
+      "description": "Wide open (aa, ah)",
+      "mouth_width": 0.6,
+      "mouth_height": 0.7,
+      "jaw_open": 0.6
+    },
+    "E": {
+      "id": 11,
+      "description": "Slight smile, teeth visible (e, eh)",
+      "mouth_width": 0.55,
+      "mouth_height": 0.3,
+      "jaw_open": 0.2
+    },
+    "I": {
+      "id": 12,
+      "description": "Wide smile (i, ee)",
+      "mouth_width": 0.6,
+      "mouth_height": 0.25,
+      "jaw_open": 0.15
+    },
+    "O": {
+      "id": 13,
+      "description": "Rounded lips, medium opening (o, aw)",
+      "mouth_width": 0.4,
+      "mouth_height": 0.5,
+      "jaw_open": 0.4
+    },
+    "U": {
+      "id": 14,
+      "description": "Pursed lips, small opening (u, oo)",
+      "mouth_width": 0.25,
+      "mouth_height": 0.45,
+      "jaw_open": 0.3
+    }
+  },
+  "phoneme_to_viseme": {
+    "": "silence",
+    " ": "silence",
+    "p": "PP",
+    "b": "PP",
+    "m": "PP",
+    "f": "FF",
+    "v": "FF",
+    "θ": "TH",
+    "ð": "TH",
+    "t": "DD",
+    "d": "DD",
+    "n": "DD",
+    "l": "DD",
+    "s": "SS",
+    "z": "SS",
+    "ʃ": "CH",
+    "ʒ": "CH",
+    "tʃ": "CH",
+    "dʒ": "CH",
+    "k": "kk",
+    "g": "kk",
+    "ŋ": "kk",
+    "h": "aa",
+    "r": "RR",
+    "ɹ": "RR",
+    "ɚ": "RR",
+    "w": "U",
+    "j": "I",
+    "ə": "nn",
+    "ʌ": "aa",
+    "æ": "aa",
+    "a": "aa",
+    "ɑ": "aa",
+    "ɐ": "aa",
+    "ɛ": "E",
+    "e": "E",
+    "ɪ": "I",
+    "i": "I",
+    "ː": "silence",
+    "ɔ": "O",
+    "o": "O",
+    "ʊ": "U",
+    "u": "U",
+    "aɪ": "aa",
+    "aʊ": "aa",
+    "eɪ": "E",
+    "oʊ": "O",
+    "ɔɪ": "O",
+    "ˈ": "silence",
+    "ˌ": "silence",
+    ".": "silence",
+    ",": "silence",
+    "!": "silence",
+    "?": "silence"
+  }
+}

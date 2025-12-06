@@ -1,6 +1,7 @@
 #ifndef CHATBOT_AVATARENGINE_H
 #define CHATBOT_AVATARENGINE_H
 
+#include "avatar/VisemeMapper.h"
 #include <QObject>
 #include <QString>
 #include <QVector3D>
@@ -60,6 +61,10 @@ public:
     void setRotation(const QQuaternion& rotation);
     void setScale(float scale);
 
+    // Lip-sync / Viseme control
+    void applyViseme(const Viseme& viseme, float blendFactor = 1.0f);
+    void applyPhoneme(const QString& phoneme);
+
 signals:
     void modelLoaded(const QString& modelPath);
     void modelLoadFailed(const QString& error);
@@ -83,11 +88,23 @@ private:
     Qt3DCore::QTransform* m_headTransform;
     Qt3DCore::QTransform* m_neckTransform;
 
+    // Mouth components
+    Qt3DExtras::QSphereMesh* m_mouthMesh;
+    Qt3DCore::QTransform* m_mouthTransform;
+    Qt3DExtras::QPhongMaterial* m_mouthMaterial;
+
     // Animation
     AvatarState m_state;
     float m_animationTime;
     float m_animationSpeed;
     bool m_isAnimating;
+
+    // Lip-sync / Viseme
+    std::unique_ptr<VisemeMapper> m_visemeMapper;
+    Viseme m_currentViseme;
+    Viseme m_targetViseme;
+    float m_visemeBlendTime;
+    float m_visemeBlendDuration;
 };
 
 } // namespace Chatbot
