@@ -1,7 +1,9 @@
 #include "ui/MainWindow.h"
+#include "ui/AvatarViewport.h"
 #include <QApplication>
 #include <QScreen>
 #include <QDateTime>
+#include <QSplitter>
 #include <spdlog/spdlog.h>
 
 namespace Chatbot {
@@ -10,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_centralWidget(nullptr)
     , m_mainLayout(nullptr)
+    , m_splitter(nullptr)
+    , m_avatarViewport(nullptr)
+    , m_chatPanel(nullptr)
+    , m_chatLayout(nullptr)
     , m_chatDisplay(nullptr)
     , m_inputWidget(nullptr)
     , m_inputLayout(nullptr)
@@ -29,7 +35,7 @@ MainWindow::~MainWindow() {
 void MainWindow::setupUI() {
     // Set window properties
     setWindowTitle("Chatbot - Animated 3D Assistant");
-    resize(800, 600);
+    resize(1200, 700);  // Wider to accommodate avatar + chat
 
     // Center window on screen
     const QRect screenGeometry = QApplication::primaryScreen()->geometry();
@@ -41,10 +47,23 @@ void MainWindow::setupUI() {
     m_centralWidget = new QWidget(this);
     setCentralWidget(m_centralWidget);
 
-    // Create main layout
-    m_mainLayout = new QVBoxLayout(m_centralWidget);
+    // Create main layout (horizontal)
+    m_mainLayout = new QHBoxLayout(m_centralWidget);
     m_mainLayout->setContentsMargins(10, 10, 10, 10);
     m_mainLayout->setSpacing(10);
+
+    // Create splitter for avatar and chat
+    m_splitter = new QSplitter(Qt::Horizontal, this);
+
+    // Create avatar viewport
+    m_avatarViewport = new AvatarViewport(this);
+    m_splitter->addWidget(m_avatarViewport);
+
+    // Create chat panel
+    m_chatPanel = new QWidget(this);
+    m_chatLayout = new QVBoxLayout(m_chatPanel);
+    m_chatLayout->setContentsMargins(0, 0, 0, 0);
+    m_chatLayout->setSpacing(10);
 
     // Create chat display
     m_chatDisplay = new QTextEdit(this);
@@ -60,7 +79,7 @@ void MainWindow::setupUI() {
         "  font-family: 'Segoe UI', Arial, sans-serif;"
         "}"
     );
-    m_mainLayout->addWidget(m_chatDisplay, 1); // Stretch factor 1
+    m_chatLayout->addWidget(m_chatDisplay, 1); // Stretch factor 1
 
     // Create input widget
     m_inputWidget = new QWidget(this);
@@ -109,7 +128,15 @@ void MainWindow::setupUI() {
     );
     m_inputLayout->addWidget(m_sendButton);
 
-    m_mainLayout->addWidget(m_inputWidget);
+    m_chatLayout->addWidget(m_inputWidget);
+
+    m_splitter->addWidget(m_chatPanel);
+
+    // Set initial splitter sizes (40% avatar, 60% chat)
+    m_splitter->setStretchFactor(0, 2);
+    m_splitter->setStretchFactor(1, 3);
+
+    m_mainLayout->addWidget(m_splitter);
 
     // Add welcome message
     addSystemMessage("Welcome to Chatbot! Type a message to start chatting.");

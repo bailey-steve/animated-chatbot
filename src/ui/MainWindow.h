@@ -7,8 +7,12 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QSplitter>
 
 namespace Chatbot {
+
+// Forward declaration
+class AvatarViewport;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,6 +25,9 @@ public:
     void addUserMessage(const QString& message);
     void addBotMessage(const QString& message);
     void addSystemMessage(const QString& message);
+
+    // Get avatar viewport
+    AvatarViewport* getAvatarViewport() const { return m_avatarViewport; }
 
 signals:
     void userMessageSubmitted(const QString& message);
@@ -37,9 +44,15 @@ private:
 private:
     // UI Components
     QWidget* m_centralWidget;
-    QVBoxLayout* m_mainLayout;
+    QHBoxLayout* m_mainLayout;
+    QSplitter* m_splitter;
 
-    // Chat display
+    // Avatar viewport
+    AvatarViewport* m_avatarViewport;
+
+    // Chat panel
+    QWidget* m_chatPanel;
+    QVBoxLayout* m_chatLayout;
     QTextEdit* m_chatDisplay;
 
     // Input area

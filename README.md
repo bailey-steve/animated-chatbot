@@ -19,8 +19,14 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 - ✅ Automatic speech synthesis for bot responses
 - ✅ High-quality neural TTS voice (Lessac)
 
+#### Phase 3 - ✅ Completed
+- ✅ Qt3D viewport integrated into UI
+- ✅ 3D avatar rendering (placeholder sphere + cylinder)
+- ✅ Camera and 3-point lighting setup
+- ✅ Idle animation with bobbing and nodding
+- ✅ 60 FPS animation loop
+
 ### Planned
-- 🔄 **Phase 3**: 3D avatar display (Qt3D/OpenGL with GLTF models)
 - 🔄 **Phase 4**: Accurate lip-sync system (phoneme → viseme mapping)
 - 🔄 **Phase 5**: Emotional expressions (sentiment analysis)
 - 🔄 **Phase 6**: Multiple personalities (JSON-based configs)

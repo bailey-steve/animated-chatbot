@@ -59,8 +59,11 @@ set(SOURCES
     # TTS
     src/tts/TTSEngine.cpp
     src/tts/PhonemeExtractor.cpp
+    # Avatar
+    src/avatar/AvatarEngine.cpp
     # UI
     src/ui/MainWindow.cpp
+    src/ui/AvatarViewport.cpp
 )
 
 set(HEADERS
@@ -73,8 +76,11 @@ set(HEADERS
     # TTS
     src/tts/TTSEngine.h
     src/tts/PhonemeExtractor.h
+    # Avatar
+    src/avatar/AvatarEngine.h
     # UI
     src/ui/MainWindow.h
+    src/ui/AvatarViewport.h
 )
 
 # Create executable
