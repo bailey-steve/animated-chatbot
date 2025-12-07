@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSplitter>
+#include <QComboBox>
+#include <QLabel>
 
 namespace Chatbot {
 
@@ -29,12 +31,17 @@ public:
     // Get avatar viewport
     AvatarViewport* getAvatarViewport() const { return m_avatarViewport; }
 
+    // Get personality selector
+    QComboBox* getPersonalitySelector() const { return m_personalitySelector; }
+
 signals:
     void userMessageSubmitted(const QString& message);
+    void personalitySelected(const QString& personalityName);
 
 private slots:
     void onSendButtonClicked();
     void onInputReturnPressed();
+    void onPersonalityChanged(int index);
 
 private:
     void setupUI();
@@ -54,6 +61,12 @@ private:
     QWidget* m_chatPanel;
     QVBoxLayout* m_chatLayout;
     QTextEdit* m_chatDisplay;
+
+    // Personality selector
+    QWidget* m_personalityWidget;
+    QHBoxLayout* m_personalityLayout;
+    QLabel* m_personalityLabel;
+    QComboBox* m_personalitySelector;
 
     // Input area
     QWidget* m_inputWidget;

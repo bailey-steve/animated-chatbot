@@ -112,7 +112,7 @@ void AvatarEngine::createPlaceholderAvatar() {
 
     // Create mouth (flattened sphere on front of head)
     m_mouthMesh = new Qt3DExtras::QSphereMesh();
-    m_mouthMesh->setRadius(0.08f);  // Small mouth
+    m_mouthMesh->setRadius(0.10f);  // Slightly larger mouth for visibility
     m_mouthMesh->setRings(16);
     m_mouthMesh->setSlices(16);
 
@@ -120,14 +120,14 @@ void AvatarEngine::createPlaceholderAvatar() {
     // Position relative to head center (head is a sphere at origin of headEntity)
     // Head center is at (0, 0, 0) in head-local space
     // Place mouth slightly below center and in front
-    m_mouthTransform->setTranslation(QVector3D(0.0f, -0.1f, 0.45f));
+    m_mouthTransform->setTranslation(QVector3D(0.0f, -0.15f, 0.46f));  // Lower and more forward
     // Flatten in Z to make it look more like a mouth shape
-    m_mouthTransform->setScale3D(QVector3D(1.0f, 0.6f, 0.3f));
+    m_mouthTransform->setScale3D(QVector3D(1.2f, 0.5f, 0.4f));  // Wider, flatter
 
     m_mouthMaterial = new Qt3DExtras::QPhongMaterial();
-    m_mouthMaterial->setDiffuse(QColor(180, 100, 100));  // Reddish for mouth/lips
-    m_mouthMaterial->setAmbient(QColor(120, 60, 60));
-    m_mouthMaterial->setSpecular(QColor(30, 30, 30));
+    m_mouthMaterial->setDiffuse(QColor(160, 80, 80));  // Darker reddish for better visibility
+    m_mouthMaterial->setAmbient(QColor(100, 50, 50));
+    m_mouthMaterial->setSpecular(QColor(40, 40, 40));
     m_mouthMaterial->setShininess(15.0f);
 
     // Create mouth entity as child of HEAD (not avatar) so it moves with head
@@ -326,16 +326,17 @@ void AvatarEngine::applyViseme(const Viseme& viseme, float blendFactor) {
 
     // Apply mouth shape based on viseme parameters
     // Scale the mouth mesh to match the viseme's mouth width and height
-    float baseScale = 1.0f;
-    float width = baseScale + (viseme.mouthWidth * 2.0f);   // Scale width
-    float height = baseScale + (viseme.mouthHeight * 2.0f); // Scale height
-    float depth = 0.3f;  // Keep depth relatively constant (flat mouth)
+    float baseWidth = 1.2f;
+    float baseHeight = 0.5f;
+    float width = baseWidth + (viseme.mouthWidth * 1.5f);   // Scale width
+    float height = baseHeight + (viseme.mouthHeight * 1.5f); // Scale height
+    float depth = 0.4f;  // Keep depth relatively constant (flat mouth)
 
     // Apply jaw opening by translating mouth down
     float jawOffset = viseme.jawOpen * 0.1f;  // Move down when jaw opens
 
     // Update mouth transform (position relative to head center)
-    QVector3D basePosition(0.0f, -0.1f, 0.45f);  // Head-relative coordinates
+    QVector3D basePosition(0.0f, -0.15f, 0.46f);  // Head-relative coordinates (updated)
     m_mouthTransform->setTranslation(basePosition + QVector3D(0.0f, -jawOffset, 0.0f));
     m_mouthTransform->setScale3D(QVector3D(width, height, depth));
 

@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
     , m_chatPanel(nullptr)
     , m_chatLayout(nullptr)
     , m_chatDisplay(nullptr)
+    , m_personalityWidget(nullptr)
+    , m_personalityLayout(nullptr)
+    , m_personalityLabel(nullptr)
+    , m_personalitySelector(nullptr)
     , m_inputWidget(nullptr)
     , m_inputLayout(nullptr)
     , m_inputField(nullptr)
@@ -64,6 +68,37 @@ void MainWindow::setupUI() {
     m_chatLayout = new QVBoxLayout(m_chatPanel);
     m_chatLayout->setContentsMargins(0, 0, 0, 0);
     m_chatLayout->setSpacing(10);
+
+    // Create personality selector
+    m_personalityWidget = new QWidget(this);
+    m_personalityLayout = new QHBoxLayout(m_personalityWidget);
+    m_personalityLayout->setContentsMargins(0, 0, 0, 0);
+    m_personalityLayout->setSpacing(10);
+
+    m_personalityLabel = new QLabel("Personality:", this);
+    m_personalityLabel->setStyleSheet("font-size: 14px; font-weight: bold;");
+    m_personalityLayout->addWidget(m_personalityLabel);
+
+    m_personalitySelector = new QComboBox(this);
+    m_personalitySelector->setStyleSheet(
+        "QComboBox {"
+        "  border: 1px solid #ddd;"
+        "  border-radius: 5px;"
+        "  padding: 5px 10px;"
+        "  font-size: 14px;"
+        "  min-width: 150px;"
+        "}"
+        "QComboBox:hover {"
+        "  border: 1px solid #4CAF50;"
+        "}"
+        "QComboBox::drop-down {"
+        "  border: none;"
+        "}"
+    );
+    m_personalityLayout->addWidget(m_personalitySelector);
+    m_personalityLayout->addStretch(); // Push to left
+
+    m_chatLayout->addWidget(m_personalityWidget);
 
     // Create chat display
     m_chatDisplay = new QTextEdit(this);
@@ -145,6 +180,8 @@ void MainWindow::setupUI() {
 void MainWindow::setupConnections() {
     connect(m_sendButton, &QPushButton::clicked, this, &MainWindow::onSendButtonClicked);
     connect(m_inputField, &QLineEdit::returnPressed, this, &MainWindow::onInputReturnPressed);
+    connect(m_personalitySelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &MainWindow::onPersonalityChanged);
 }
 
 void MainWindow::onSendButtonClicked() {
@@ -160,6 +197,14 @@ void MainWindow::onSendButtonClicked() {
 
 void MainWindow::onInputReturnPressed() {
     onSendButtonClicked();
+}
+
+void MainWindow::onPersonalityChanged(int index) {
+    if (index >= 0) {
+        QString personalityName = m_personalitySelector->currentText();
+        spdlog::info("Personality changed to: {}", personalityName.toStdString());
+        emit personalitySelected(personalityName);
+    }
 }
 
 void MainWindow::clearInput() {

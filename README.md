@@ -1,3 +1,4 @@
+
 # Animated 3D Chatbot
 
 A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D animated avatars with accurate lip-sync, emotional expressions, and multiple selectable personalities.
@@ -40,8 +41,15 @@ A C++ desktop chatbot application featuring local LLM integration (Ollama), 3D a
 - ✅ Dynamic eyebrow positioning and rotation
 - ✅ Real-time expression changes based on bot response sentiment
 
+#### Phase 6 - ✅ Completed
+- ✅ PersonalityManager with JSON configuration system
+- ✅ 5 distinct personalities (Friendly, Professional, Curious, Enthusiastic, Calm)
+- ✅ Personality selector dropdown in UI
+- ✅ Real-time personality switching
+- ✅ System prompts update per personality
+- ✅ Avatar default emotions match personality
+
 ### Planned
-- 🔄 **Phase 6**: Multiple personalities (JSON-based configs)
 - 🔄 **Phase 7**: Polish & optimization
 
 ## Prerequisites

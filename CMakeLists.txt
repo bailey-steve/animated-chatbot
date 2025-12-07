@@ -64,6 +64,8 @@ set(SOURCES
     src/avatar/VisemeMapper.cpp
     # Emotion
     src/emotion/EmotionDetector.cpp
+    # Personality
+    src/personality/PersonalityManager.cpp
     # UI
     src/ui/MainWindow.cpp
     src/ui/AvatarViewport.cpp
@@ -84,6 +86,8 @@ set(HEADERS
     src/avatar/VisemeMapper.h
     # Emotion
     src/emotion/EmotionDetector.h
+    # Personality
+    src/personality/PersonalityManager.h
     # UI
     src/ui/MainWindow.h
     src/ui/AvatarViewport.h

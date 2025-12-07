@@ -5,6 +5,7 @@
 #include "tts/TTSEngine.h"
 #include "avatar/AvatarEngine.h"
 #include "emotion/EmotionDetector.h"
+#include "personality/PersonalityManager.h"
 #include <spdlog/spdlog.h>
 
 namespace Chatbot {
@@ -60,9 +61,27 @@ void Application::initializeComponents() {
     m_emotionDetector = std::make_unique<EmotionDetector>();
     spdlog::info("EmotionDetector initialized");
 
+    // Create PersonalityManager
+    m_personalityManager = std::make_unique<PersonalityManager>();
+    m_personalityManager->loadPersonalities();
+    spdlog::info("PersonalityManager initialized");
+
     // Create MainWindow
     m_mainWindow = std::make_unique<MainWindow>();
     spdlog::info("MainWindow initialized");
+
+    // Populate personality selector
+    QStringList personalities = m_personalityManager->getAvailablePersonalities();
+    QComboBox* selector = m_mainWindow->getPersonalitySelector();
+    for (const QString& personality : personalities) {
+        selector->addItem(personality);
+    }
+    // Set to current personality
+    QString currentPersonality = m_personalityManager->getCurrentPersonalityName();
+    int index = selector->findText(currentPersonality);
+    if (index >= 0) {
+        selector->setCurrentIndex(index);
+    }
 }
 
 void Application::setupConnections() {
@@ -122,6 +141,30 @@ void Application::setupConnections() {
                         });
         spdlog::info("Emotion detection connections established");
     }
+
+    // Connect MainWindow personality selector to PersonalityManager and ChatEngine
+    QObject::connect(m_mainWindow.get(), &MainWindow::personalitySelected,
+                    this, [this, avatarEngine](const QString& personalityName) {
+                        // Change personality in manager
+                        if (m_personalityManager->setPersonality(personalityName)) {
+                            Personality personality = m_personalityManager->getCurrentPersonality();
+
+                            // Update ChatEngine system prompt
+                            m_chatEngine->setSystemPrompt(personality.systemPrompt);
+
+                            // Update avatar default emotion
+                            if (avatarEngine) {
+                                avatarEngine->applyEmotion(personality.defaultEmotion);
+                            }
+
+                            // Show system message
+                            QString message = QString("Switched to %1 personality").arg(personalityName);
+                            m_mainWindow->addSystemMessage(message);
+
+                            spdlog::info("Personality switched to: {}", personalityName.toStdString());
+                        }
+                    });
+    spdlog::info("Personality system connections established");
 
     spdlog::info("Connections established");
 }

@@ -12,6 +12,7 @@ class MainWindow;
 class ChatEngine;
 class TTSEngine;
 class EmotionDetector;
+class PersonalityManager;
 
 class Application : public QObject {
     Q_OBJECT
@@ -42,6 +43,7 @@ private:
     std::unique_ptr<ChatEngine> m_chatEngine;
     std::unique_ptr<TTSEngine> m_ttsEngine;
     std::unique_ptr<EmotionDetector> m_emotionDetector;
+    std::unique_ptr<PersonalityManager> m_personalityManager;
 
     int m_argc;
     char** m_argv;
